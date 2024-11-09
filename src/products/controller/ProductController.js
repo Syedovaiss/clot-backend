@@ -97,20 +97,32 @@ exports.addProductImage = async (req, res) => {
 
 exports.getProductByCategoryId = async (req, res) => {
     const categoryId = req.query.categoryId
-    await Product.find( {categoryId: categoryId}).then((products) => {
-       return res.status(200).json({
+    await Product.find({ categoryId: categoryId }).then((products) => {
+        return res.status(200).json({
             message: "Products",
             data: products
         })
     }).catch(error => {
-        return res.status(500).json( {
+        return res.status(500).json({
             message: error.message
         })
     })
 }
 
-exports.getLastTenProducts = async(req,res) => {
+exports.getLastTenProducts = async (req, res) => {
     await Product.find().limit(10).then((data) => {
+        return res.status(200).json({
+            data: data
+        })
+    }).catch(error => {
+        return res.status(400).json({
+            message: error.message
+        })
+    })
+}
+
+exports.getTopSelling = async (req, res) => {
+    await Product.find().sort({ _id: 1 }).limit(5).then((data) => {
         return res.status(200).json({
             data: data
         })
