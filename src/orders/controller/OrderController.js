@@ -72,3 +72,17 @@ exports.placeOrder = async (req, res) => {
         })
     }
 }
+
+exports.getAllOrders = async(req,res) => {
+    const token = req.header('Authorization')
+    const userId = authHelper.getUserId(token)
+    await Order.find({userId:userId}).then(data => {
+        return res.status(200).json({
+            orders: data
+        })
+    }).catch(error => {
+        return res.status(400).json({
+            message: error.message
+        })
+    })
+}

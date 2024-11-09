@@ -108,3 +108,15 @@ exports.getProductByCategoryId = async (req, res) => {
         })
     })
 }
+
+exports.getLastTenProducts = async(req,res) => {
+    await Product.find().limit(10).then((data) => {
+        return res.status(200).json({
+            data: data
+        })
+    }).catch(error => {
+        return res.status(400).json({
+            message: error.message
+        })
+    })
+}
