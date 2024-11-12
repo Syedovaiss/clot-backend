@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const userRouter = require('./src/user/router/UserRouter')
 const categoryRouter = require('./src/categories/router/CategoryRouter')
 const path = require('path')
@@ -10,10 +11,12 @@ const paymentRouter = require('./src/payments/router/PaymentRouter')
 const cartRouter = require('./src/cart/router/CartRouter')
 const orderRouter = require('./src/orders/router/OrderRouter')
 const wishlistRouter = require('./src/wishlist/router/WishlistRouter')
+const searchRouter = require('./src/search/router/SearchRouter')
 
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASE_URL)
 const database = mongoose.connection
+app.use(cors())
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 database.on('error',(error) => {
@@ -33,6 +36,7 @@ app.use('/api',paymentRouter)
 app.use('/api',cartRouter)
 app.use('/api',orderRouter)
 app.use('/api',wishlistRouter)
+app.use('/api',searchRouter)
 
 app.get('/',(req,res) => {
     res.send("Welcome to Clot")
