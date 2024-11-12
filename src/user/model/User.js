@@ -11,14 +11,7 @@ const schema = new mongoose.Schema({
     email: {
         required: true,
         type: String,
-        unique: true,
-        validate: {
-            validator: async function (value) {
-                const count = await mongoose.models.User.countDocuments({ email: value });
-                return count === 0;
-            },
-            message: 'Email already exists'
-        }
+        unique: true
     },
     password: {
         required: true,
@@ -43,14 +36,7 @@ const schema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         required: true,
-        unique: true,
-        validate: {
-            validator: async function (value) {
-                const count = await mongoose.models.User.countDocuments({ phoneNumber: value });
-                return count === 0;
-            },
-            message: 'Phone already exists'
-        }
+        unique: false
     }
 })
 module.exports = mongoose.model('User', schema)

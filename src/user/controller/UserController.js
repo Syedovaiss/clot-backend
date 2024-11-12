@@ -42,30 +42,30 @@ exports.registerUser = async (req, res) => {
     } else {
         const passwordHash = authHelper.generatePassword(password)
         try {
-            const data = new User({
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                phoneNumber: phoneNumber,
-                gender: gender,
-                password: passwordHash
-            })
-            const savedUser = await data.save()
-            return res.status(201).json({
-                message: `User Created! for ${savedUser.firstName}`
-            })
-        } catch (error) {
-            if (error.name === 'ValidationError') {
+            const isUserAlreadySignedUp = await User.findOne({ email: email });
+            console.log("Found user with email:", isUserAlreadySignedUp); 
+            if (isUserAlreadySignedUp) {
                 return res.status(400).json({
-                    message: error.message
-                })
+                    message: "User already exists!"
+                });
             } else {
-                return res.status(400).json({
-                    message: "Error while creating User!",
-                    detailedMessage: error.message
+                const data = User({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    gender: gender,
+                    password: passwordHash
+                })
+                const savedUser = await data.save()
+                return res.status(201).json({
+                    message: `User Created! for ${savedUser.firstName}`
                 })
             }
-
+        } catch (error) {
+            return res.status(400).json({
+                message: error.message
+            })
         }
     }
 }
@@ -139,7 +139,7 @@ exports.addUserInfo = async (req, res) => {
     })
 }
 
-exports.updateProfilePhoto = async (req,res) => {
+exports.updateProfilePhoto = async (req, res) => {
     imageConfig.upload(req, res, async (error) => {
         if (error) {
             return res.status(400).json({
@@ -170,21 +170,21 @@ exports.updateProfilePhoto = async (req,res) => {
             res.status(500).json({ error: 'Failed to save image in database.', details: err });
         }
     })
-} 
+}
 
-exports.getUserProfile = async(req,res) => {
+exports.getUserProfile = async (req, res) => {
     const token = req.header('Authorization')
     const userId = authHelper.getUserId(token)
     await User.findById(userId).then((user) => {
-        return res.status(200).json( {
+        return res.status(200).json({
             firstName: user.firstName,
-            lastName:user.lastName,
+            lastName: user.lastName,
             age: user.age,
-            avatar:user.avatar,
-            phoneNumber:user.phoneNumber,
-            email:user.email,
+            avatar: user.avatar,
+            phoneNumber: user.phoneNumber,
+            email: user.email,
             clothesPriority: user.clothesPriorityFor,
-            gender:user.gender
+            gender: user.gender
         })
     }).catch(error => {
         res.status(500).json({
