@@ -19,6 +19,7 @@ This repository is a sample backend for a React Native e-commerce app, providing
 - Payment Method API
 - Order Placement API
 - Wishlist API
+- Search API
 
 
 ## Installation
