@@ -21,8 +21,8 @@ const schema = new mongoose.Schema({
         required: true,
         type: String,
     },
-    age: {
-        type: Number,
+    ageRange: {
+        type: String,
         required: false
     },
     clothesPriorityFor: {
