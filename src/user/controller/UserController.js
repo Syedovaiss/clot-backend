@@ -125,7 +125,7 @@ exports.addUserInfo = async (req, res) => {
     const userId = authHelper.getUserId(token)
     const { age, interestedIn } = req.body;
     await User.updateOne(
-        { _id: userId }, { $set: { age: age, clothesPriorityFor: interestedIn } }
+        { _id: userId }, { $set: { ageRange: age, clothesPriorityFor: interestedIn } }
     ).then((data) => {
         console.log(`User updated!:${userId}`)
         return res.status(201).json({
