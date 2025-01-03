@@ -42,7 +42,7 @@ exports.addCategoryImage = async (req, res) => {
     imageConfig.upload(req, res, async (error) => {
         if (error) {
             return res.status(400).json({
-                message: "Something went wrong while saving image."
+                message: `Something went wrong while saving image because ${error}`
             })
         }
 
