@@ -35,9 +35,9 @@ function updateCartTotal() {
 exports.addToCart = async (req, res) => {
     const response = {
         subTotal: 0,
-        shippingFee: 100,
+        shippingFee: 200,
         total: 0,
-        tax: 100
+        tax: 1
     }
     for (const cartItem of req.body) {
         await Product.findOne({ _id: cartItem.productId }).then((data) => {

@@ -37,11 +37,13 @@ exports.placeOrder = async (req, res) => {
                 message: "User doesn't have this payment card saved"
             })
         }
-        const newCartItems = []; 
+        console.log(req.body)
+        const newCartItems = [];
+
 
         cartItems.forEach(element => {
             const newItem = {
-                productId: element.productId,
+                productId: element._id,
                 quantity: element.quantity,
                 size: element.size,
                 color: element.color
@@ -63,7 +65,8 @@ exports.placeOrder = async (req, res) => {
             }
         }).then((order) => {
             return res.status(201).json({
-                message: "Order placed!"
+                message: "Order placed!",
+                order: order
             })
         }).catch(error => {
             return res.status(400).json({
@@ -76,10 +79,30 @@ exports.placeOrder = async (req, res) => {
 exports.getAllOrders = async(req,res) => {
     const token = req.header('Authorization')
     const userId = authHelper.getUserId(token)
-    await Order.find({userId:userId}).then(data => {
-        return res.status(200).json({
-            orders: data
+    await Order.find({userId:userId}).then(async(order) => {
+        await Address.findOne({addressId:order.addressId}).then(async(addressDTO) => {
+            await Payment.findOne({paymentId: order.paymentId}).then(paymentDto => {
+                return res.status(200).json({
+                    data: order,
+                    shippingAddress: addressDTO.address,
+                    paymentInfo: {
+                        cardNumber: appHelper.maskCardNumber(paymentDto.cardNumber),
+                        cardType: paymentDto.cardType,
+                        cardHolderName: paymentDto.cardHolderName
+                    }
+                })
+            }).catch(error => {
+                return res.status(400).json({
+                    message: error.message
+                })
+            })
+        
+        }).catch(error => {
+            return res.status(400).json({
+                message: error.message
+            })
         })
+
     }).catch(error => {
         return res.status(400).json({
             message: error.message
