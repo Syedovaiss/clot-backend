@@ -12,7 +12,7 @@ function addProduct(product, quantity,color,size) {
         image: product.image,
         color: color,
         size: size,
-        id: product._id,
+        _id: product._id,
         price: product.price
     }
     cartItems.push(productAdded);
@@ -78,7 +78,7 @@ exports.incrementItem = async (req, res) => {
     let itemUpdated = false;
 
     for (let cartItem of cartItems) {
-        if (cartItem.id.toString() === productId) {
+        if (cartItem._id.toString() === productId) {
             cartItem.quantity += 1;
             itemUpdated = true;
             break;
@@ -106,7 +106,7 @@ exports.decrementItem = async (req, res) => {
     let itemUpdated = false;
 
     for (let cartItem of cartItems) {
-        if (cartItem.id.toString() === productId) {
+        if (cartItem._id.toString() === productId) {
             if (cartItem.quantity > 1) {
                 cartItem.quantity -= 1;
             } else {
