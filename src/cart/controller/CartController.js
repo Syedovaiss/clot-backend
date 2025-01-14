@@ -4,15 +4,24 @@ const appHelper = require('../../utils/helpers/AppHelper')
 let cartItems = [];
 let cartItemTotal = {}
 
-function addProduct(product, quantity) {
-    cartItems.push({ product, quantity });
+function addProduct(product, quantity,color,size) {
+    let productAdded = {
+        title: product.title,
+        description: product.description,
+        quantity: quantity,
+        image: product.image,
+        color: color,
+        size: size,
+        id: product._id,
+        price: product.price
+    }
+    cartItems.push(productAdded);
 }
 
 function updateCartTotal() {
-    // Recalculate the total, subtotal, tax, and shipping fee
     let subTotal = 0;
     for (const cartItem of cartItems) {
-        let price = appHelper.toPrice(cartItem.product.price);
+        let price = appHelper.toPrice(cartItem.price);
         subTotal += price * cartItem.quantity;
     }
 
@@ -32,7 +41,7 @@ exports.addToCart = async (req, res) => {
     }
     for (const cartItem of req.body) {
         await Product.findOne({ _id: cartItem.productId }).then((data) => {
-            addProduct(data, cartItem.quantity)
+            addProduct(data, cartItem.quantity,cartItem.color,cartItem.size)
             let price = appHelper.toPrice(data.price)
             const productPrice = price * cartItem.quantity
             response.subTotal += productPrice
@@ -69,7 +78,7 @@ exports.incrementItem = async (req, res) => {
     let itemUpdated = false;
 
     for (let cartItem of cartItems) {
-        if (cartItem.product._id.toString() === productId) {
+        if (cartItem.id.toString() === productId) {
             cartItem.quantity += 1;
             itemUpdated = true;
             break;
@@ -97,7 +106,7 @@ exports.decrementItem = async (req, res) => {
     let itemUpdated = false;
 
     for (let cartItem of cartItems) {
-        if (cartItem.product._id.toString() === productId) {
+        if (cartItem.id.toString() === productId) {
             if (cartItem.quantity > 1) {
                 cartItem.quantity -= 1;
             } else {
