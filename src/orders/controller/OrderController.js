@@ -39,18 +39,22 @@ exports.placeOrder = async (req, res) => {
         }
         console.log(req.body)
         const newCartItems = [];
-
-
         cartItems.forEach(element => {
             const newItem = {
                 productId: element._id,
                 quantity: element.quantity,
                 size: element.size,
-                color: element.color
+                color: element.color,
+                image: element.image,
+                title: element.title,
+                description: element.description,
+                price: element.price
             };
 
             newCartItems.push(newItem);
         });
+        console.log("New Cart Items")
+        console.log(newCartItems)
 
         await Order.create({
             userId: userId,

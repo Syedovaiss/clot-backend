@@ -15,6 +15,22 @@ const itemsSchema = new mongoose.Schema( {
     color: {
         required: true,
         type: String
+    },
+    price: {
+        required: true,
+        type: String,
+    },
+    image: {
+        required: true,
+        type: String,
+    },
+    description: {
+        required: true,
+        type: String,
+    },
+    title: {
+        required: true,
+        type: String,
     }
 })
 
